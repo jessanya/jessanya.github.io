@@ -32,23 +32,28 @@
 </head>
 <body>
   <script>
-    function load() {
-      const video = document.getElementById('player');
-      video.src = document.getElementById('url').value;
-      video.load();
-      video.play();
-      video.style.display = 'block';
-    }
-
-    function load_hash() {
-        const hash = decodeURIComponent(window.location.hash.substring(1));
-        url.value = hash;
-        load();
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       const url = document.getElementById('url');
       let timeout;
+      let ignore_change = false;
+
+      function load() {
+        const video = document.getElementById('player');
+        video.src = document.getElementById('url').value;
+        video.load();
+        video.play();
+        video.style.display = 'block';
+      }
+
+      function load_hash() {
+          const hash = decodeURIComponent(window.location.hash.substring(1));
+          url.value = hash;
+          if (!ignore_change) {
+            load();
+          }
+          ignore_change = false;
+      }
+
 
       if (window.location.hash.length > 1) {
         load_hash();
@@ -62,6 +67,7 @@
 
         clearTimeout(timeout);
         timeout = setTimeout(() => {
+          ignore_change = true;
           window.location.hash = encodeURIComponent(url.value);
         }, 250);
       });
