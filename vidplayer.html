@@ -52,8 +52,9 @@
           event.preventDefault();
           load();
         }
+
         clearTimeout(timeout);
-        debounceTimeout = setTimeout(() => {
+        timeout = setTimeout(() => {
           window.location.hash = encodeURIComponent(url.value);
         }, 250);
       });
