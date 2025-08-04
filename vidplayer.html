@@ -1,0 +1,70 @@
+<html>
+<head>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      background-color: #1c1c1c;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+    #container {
+      display: flex;
+      max-width: 800px;
+      margin-bottom: 8px;
+      width: 100%;
+    }
+    #url {
+      background-color: #1c1c1c;
+      color: #eee;
+      box-sizing: border-box;
+      flex-grow: 1;
+    }
+    #player {
+      height: 100%;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    function load() {
+      const video = document.getElementById('player');
+      video.src = document.getElementById('url').value;
+      video.load();
+      video.play();
+      video.style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const url = document.getElementById('url');
+      let timeout;
+
+      if (window.location.hash.length > 1) {
+        const hash = decodeURIComponent(window.location.hash.substring(1));
+        url.value = hash;
+        load();
+      }
+
+      url.addEventListener('keydown', (event) => {
+        if(event.key === 'Enter'){
+          event.preventDefault();
+          load();
+        }
+        clearTimeout(timeout);
+        debounceTimeout = setTimeout(() => {
+          window.location.hash = encodeURIComponent(url.value);
+        }, 250);
+      });
+    });
+  </script>
+
+  <div id='container'>
+    <input id='url' type='text' placeholder='URL' />
+    <button onclick='load()'>Play</button> 
+  </div>
+
+  <video id='player' controls></video>
+</body>
+</html>
